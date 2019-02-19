@@ -2,10 +2,11 @@ require 'rails_helper'
 
 feature 'User update recipe' do
   scenario 'successfully' do
-    Recipe.create(title: 'Bolodecenoura', difficulty: 'Médio',
+    r = Recipe.new(title: 'Bolodecenoura', difficulty: 'Médio',
                   cook_time: 50,
                   ingredients: 'Farinha, açucar, cenoura',
                   cook_method: 'Cozinhe a cenoura, corte em pedaços pequenos, misture com o restante dos ingredientes')
+    r.save
 
     # simula a ação do usuário
     visit root_path
