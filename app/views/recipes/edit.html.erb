@@ -1,8 +1,8 @@
 <h1>Editar Receita</h1>
 
-<%= form_for(@receita) do |f| %>
+<%= form_for(@recipe) do |f| %>
     <%= f.label(:title, 'Título') %>
-    <%= f.text_field(:title) %>    
+    <%= f.text_field(:title) %>
      <%= f.label :recipe_type, 'Tipo da Receita' %>
     <%= f.text_field :recipe_type %>
     <%= f.label :cuisine, 'Cozinha' %>
