@@ -2,23 +2,36 @@ require 'rails_helper'
 
 feature 'User update recipe' do
   scenario 'successfully' do
+    recipe_type = RecipeType.create(name: 'Sobremesa')
+    RecipeType.create(name: 'Entrada')
     Recipe.create(title: 'Bolodecenoura', difficulty: 'Médio',
-                  recipe_type: 'Sobremesa', cuisine: 'Brasileira',
+                  recipe_type: recipe_type, cuisine: 'Brasileira',
                   cook_time: 50, ingredients: 'Farinha, açucar, cenoura',
                   cook_method: 'Cozinhe a cenoura, corte em pedaços pequenos, misture com o restante dos ingredientes')
+    User.create!(email: 'joao@email.com', password: '12345678')
 
     # simula a ação do usuário
     visit root_path
+    click_on 'Entrar'
+    fill_in 'Email', with: 'joao@email.com'
+    fill_in 'Senha', with: '12345678'
+    within 'div.actions' do
+      click_on 'Entrar'
+    end
     click_on 'Bolodecenoura'
     click_on 'Editar'
 
-    fill_in 'Título', with: 'Bolo de cenoura'
-    fill_in 'Dificuldade', with: 'Médio'
-    fill_in 'Tempo de Preparo', with: '45'
-    fill_in 'Ingredientes', with: 'Cenoura, farinha, ovo, oleo de soja e chocolate'
-    fill_in 'Como Preparar', with: 'Faça um bolo e uma cobertura de chocolate'
 
-    click_on 'Enviar'
+    within 'form.edit_recipe' do
+      fill_in 'Título', with: 'Bolo de cenoura'
+      select 'Entrada', from: 'Tipo da Receita'
+      fill_in 'Dificuldade', with: 'Médio'
+      fill_in 'Tempo de Preparo', with: '45'
+      fill_in 'Ingredientes', with: 'Cenoura, farinha, ovo, oleo de soja e chocolate'
+      fill_in 'Como Preparar', with: 'Faça um bolo e uma cobertura de chocolate'
+
+      click_on 'Enviar'
+    end
 
     expect(page).to have_css('h1', text: 'Bolo de cenoura')
     expect(page).to have_css('h3', text: 'Detalhes')
@@ -29,25 +42,34 @@ feature 'User update recipe' do
   end
 
   scenario 'and must fill in all fields' do
+    recipe_type = RecipeType.create(name: 'Sobremesa')
     Recipe.create(title: 'Bolodecenoura', difficulty: 'Médio',
-                  recipe_type: 'Sobremesa', cuisine: 'Brasileira',
+                  recipe_type: recipe_type, cuisine: 'Brasileira',
                   cook_time: 50, ingredients: 'Farinha, açucar, cenoura',
                   cook_method: 'Cozinhe a cenoura, corte em pedaços pequenos, misture com o restante dos ingredientes')
+    User.create!(email: 'joao@email.com', password: '12345678')
 
     # simula a ação do usuário
     visit root_path
+    click_on 'Entrar'
+    fill_in 'Email', with: 'joao@email.com'
+    fill_in 'Senha', with: '12345678'
+    within 'div.actions' do
+      click_on 'Entrar'
+    end
     click_on 'Bolodecenoura'
     click_on 'Editar'
 
-    fill_in 'Título', with: ''
-    fill_in 'Tipo da Receita', with: ''
-    fill_in 'Cozinha', with: ''
-    fill_in 'Dificuldade', with: ''
-    fill_in 'Tempo de Preparo', with: ''
-    fill_in 'Ingredientes', with: ''
-    fill_in 'Como Preparar', with: ''
-    click_on 'Enviar'
+    within 'form.edit_recipe' do
 
+      fill_in 'Título', with: ''
+      fill_in 'Cozinha', with: ''
+      fill_in 'Dificuldade', with: ''
+      fill_in 'Tempo de Preparo', with: ''
+      fill_in 'Ingredientes', with: ''
+      fill_in 'Como Preparar', with: ''
+      click_on 'Enviar'
+    end
 
     expect(page).to have_content('Não foi possível salvar a receita')
   end

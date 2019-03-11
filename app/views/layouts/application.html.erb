@@ -11,6 +11,23 @@
 
   <body>
     <%= flash[:error] %>
-    <%= yield %>
+    <%= notice %>
+    <%= alert %>
+    <nav>
+      <% if user_signed_in? %>
+        <span>Olá <%= current_user.email %></span>
+        <%= link_to 'Sair', nil %>
+      <% else %>
+        <%= link_to 'Entrar', new_user_session_path %>
+      <% end %>
+    </nav>
+    <%= form_tag(search_recipes_path, method: :get) do %>
+     <%= label_tag :q, 'Busca' %>
+     <%= text_field_tag :q %>
+     <%= submit_tag 'Enviar' %>
+    <% end %>
+    <div class="container">
+      <%= yield %>
+    </div>
   </body>
 </html>
