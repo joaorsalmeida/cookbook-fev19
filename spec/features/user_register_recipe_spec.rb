@@ -7,6 +7,9 @@ feature 'User register recipe' do
     RecipeType.create(name: 'Entrada')
     User.create!(email: 'joao@email.com', password: '12345678')
 
+    mailer_spy = class_spy(RecipesMailer)
+    stub_const('RecipesMailer', mailer_spy)
+
     visit root_path
     click_on 'Entrar'
     fill_in 'Email', with: 'joao@email.com'
@@ -27,8 +30,9 @@ feature 'User register recipe' do
       click_on 'Enviar'
     end
 
-
     # expectativas
+    recipe = Recipe.last
+    expect(RecipesMailer).to have_received(:notify_new_recipe).with(recipe.id)
     expect(page).to have_css('h1', text: 'Tabule')
     expect(page).to have_css('h3', text: 'Detalhes')
     expect(page).to have_css('p', text: 'Entrada')

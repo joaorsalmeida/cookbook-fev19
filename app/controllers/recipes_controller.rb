@@ -2,7 +2,6 @@ class RecipesController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update]
   def index
     @recipes = Recipe.all
-
   end
 
   def show
@@ -17,6 +16,8 @@ class RecipesController < ApplicationController
   def create
     @recipe = Recipe.new(recipe_params)
     if @recipe.save
+      #RecipesMailer.with(recipe_id: @recipe.id).notify_new_recipe
+      RecipesMailer.notify_new_recipe(@recipe.id)
       redirect_to @recipe
     else
       @recipe_types = RecipeType.all
